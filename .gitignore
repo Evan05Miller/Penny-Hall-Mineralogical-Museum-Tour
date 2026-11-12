@@ -1,0 +1,8 @@
+node_modules/
+dist/
+_preview/
+_floor_crop.png
+_floor_marks.png
+_parse_scan.py
+_orient_skybox.py
+_floor.py

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900">
+  <rect width="1200" height="900" fill="#262014"/>
+  <rect x="70" y="70" width="1060" height="760" fill="none" stroke="#e0c06a" stroke-opacity="0.45" stroke-width="2"/>
+  <polygon points="475,220 540,130 605,200 580,295 495,285" fill="#e0c06a" opacity="0.9"/>
+  <polygon points="475,220 540,130 605,200 580,295 495,285" fill="none" stroke="#f4efe6" stroke-opacity="0.35" stroke-width="3"/>
+  <text x="600" y="620" text-anchor="middle" fill="#f4efe6" font-family="Georgia, serif" font-size="72">Display 4</text>
+  <text x="600" y="680" text-anchor="middle" fill="#e0c06a" font-family="Georgia, serif" font-size="28" letter-spacing="6">PLACEHOLDER</text>
+  <text x="600" y="760" text-anchor="middle" fill="#c9bfb0" font-family="Georgia, serif" font-size="24">Add case-4.jpg to replace this card</text>
+</svg>
