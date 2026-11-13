@@ -29,6 +29,12 @@ const modalPhoto = document.querySelector("#modal-photo");
 const modalTitle = document.querySelector("#modal-title");
 const modalCaption = document.querySelector("#modal-caption");
 const modalHint = document.querySelector("#modal-hint");
+const modalCount = document.querySelector("#modal-count");
+const photoStage = document.querySelector(".photo-stage");
+const loupe = document.querySelector("#loupe");
+const magnifyButton = document.querySelector("#modal-magnify");
+const modalPrev = document.querySelector("#modal-prev");
+const modalNext = document.querySelector("#modal-next");
 
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -64,6 +70,9 @@ let boxes = [];
 let markers = [];
 let floorImage = null;
 let openIndex = -1;
+let currentDisplay = null;
+let photoIndex = 0;
+let magnifyOn = false;
 let pointerDown = null;
 
 function clamp(value, min, max) {
@@ -96,7 +105,7 @@ async function resolvePhoto(id) {
     const url = `${base}displays/${id}.${ext}`;
     if (await probe(url)) return { url, placeholder: false };
   }
-  return { url: `${base}displays/${id}.svg`, placeholder: true };
+  return { url: "", placeholder: true };
 }
 
 function loadTexture(url) {
@@ -234,11 +243,10 @@ function horizontalDistance(display) {
 }
 
 function directionFromSweep(display, target) {
-  const cp = Math.cos(display.pitch);
-  target.set(-Math.sin(display.yaw) * cp, Math.sin(display.pitch), -Math.cos(display.yaw) * cp);
   const sweep = sweeps[display.sweep];
   origin.set(sweep.x, EYE, sweep.z);
-  return target;
+  target.set(display.position[0] - sweep.x, display.position[1] - EYE, display.position[2] - sweep.z);
+  return target.normalize();
 }
 
 function updateMarkers(time) {
@@ -333,16 +341,97 @@ function showToast(message) {
   toastUntil = performance.now() + 2800;
 }
 
-function openDisplay(display) {
-  openIndex = displays.indexOf(display);
-  modalPhoto.src = display.resolved.url;
-  modalPhoto.alt = display.title;
-  modalTitle.textContent = display.title;
-  modalCaption.textContent = display.caption;
-  modalHint.hidden = !display.resolved.placeholder;
-  modalHint.textContent = display.resolved.placeholder
-    ? `Placeholder. Save your photo as public/displays/${display.id}.jpg and reload.`
+function photosOf(display) {
+  if (display.photos && display.photos.length) return display.photos;
+  return [
+    {
+      url: display.resolved.url,
+      label: "Photo",
+      placeholder: Boolean(display.resolved.placeholder),
+    },
+  ];
+}
+
+function showCurrentPhoto() {
+  const photos = photosOf(currentDisplay);
+  photoIndex = ((photoIndex % photos.length) + photos.length) % photos.length;
+  const photo = photos[photoIndex];
+  modalPhoto.src = photo.url;
+  modalPhoto.alt = `${currentDisplay.title}, ${photo.label}`;
+  modalCaption.textContent = photo.label;
+  modalCount.hidden = photos.length < 2;
+  modalCount.textContent = photos.length > 1 ? `${photoIndex + 1} of ${photos.length}` : "";
+  modalHint.hidden = !photo.placeholder;
+  modalHint.textContent = photo.placeholder
+    ? `Placeholder. Save your photo as public/displays/${currentDisplay.id}.jpg and reload.`
     : "";
+  modalPrev.hidden = photos.length < 2;
+  modalNext.hidden = photos.length < 2;
+  loupe.hidden = true;
+}
+
+function shiftPhoto(delta) {
+  if (!currentDisplay) return;
+  photoIndex += delta;
+  showCurrentPhoto();
+}
+
+function setMagnify(on) {
+  magnifyOn = on;
+  magnifyButton.setAttribute("aria-pressed", on ? "true" : "false");
+  modalPhoto.classList.toggle("magnify", on);
+  if (!on) loupe.hidden = true;
+}
+
+function imageContentRect(image) {
+  const rect = image.getBoundingClientRect();
+  const naturalWidth = image.naturalWidth;
+  const naturalHeight = image.naturalHeight;
+  if (!naturalWidth || !naturalHeight) return null;
+  const scale = Math.min(rect.width / naturalWidth, rect.height / naturalHeight);
+  const width = naturalWidth * scale;
+  const height = naturalHeight * scale;
+  return {
+    left: rect.left + (rect.width - width) / 2,
+    top: rect.top + (rect.height - height) / 2,
+    width,
+    height,
+  };
+}
+
+function moveLoupe(event) {
+  if (!magnifyOn || modal.hidden) {
+    loupe.hidden = true;
+    return;
+  }
+  const content = imageContentRect(modalPhoto);
+  if (!content) {
+    loupe.hidden = true;
+    return;
+  }
+  const x = event.clientX - content.left;
+  const y = event.clientY - content.top;
+  if (x < 0 || y < 0 || x > content.width || y > content.height) {
+    loupe.hidden = true;
+    return;
+  }
+  const size = 190;
+  const zoom = 2.8;
+  const stage = photoStage.getBoundingClientRect();
+  loupe.hidden = false;
+  loupe.style.left = `${event.clientX - stage.left - size / 2}px`;
+  loupe.style.top = `${event.clientY - stage.top - size / 2}px`;
+  loupe.style.backgroundImage = `url("${modalPhoto.currentSrc || modalPhoto.src}")`;
+  loupe.style.backgroundSize = `${content.width * zoom}px ${content.height * zoom}px`;
+  loupe.style.backgroundPosition = `${size / 2 - x * zoom}px ${size / 2 - y * zoom}px`;
+}
+
+function openDisplay(display) {
+  currentDisplay = display;
+  photoIndex = 0;
+  openIndex = displays.indexOf(display);
+  modalTitle.textContent = display.title;
+  showCurrentPhoto();
   modal.hidden = false;
   modalOpen = true;
   promptEl.hidden = true;
@@ -351,6 +440,8 @@ function openDisplay(display) {
 function closeModal() {
   modal.hidden = true;
   modalOpen = false;
+  loupe.hidden = true;
+  setMagnify(false);
 }
 
 function activateDisplay(display) {
@@ -523,6 +614,16 @@ function bindInput() {
   new ResizeObserver(() => resize()).observe(canvas);
 
   window.addEventListener("keydown", (event) => {
+    if (modalOpen && !event.repeat && event.code === "ArrowLeft") {
+      event.preventDefault();
+      shiftPhoto(-1);
+      return;
+    }
+    if (modalOpen && !event.repeat && event.code === "ArrowRight") {
+      event.preventDefault();
+      shiftPhoto(1);
+      return;
+    }
     keys.add(event.code);
     if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Space"].includes(event.code)) {
       event.preventDefault();
@@ -604,11 +705,12 @@ function bindInput() {
   modal.addEventListener("click", (event) => {
     if (event.target.closest("[data-close]")) closeModal();
   });
-  document.querySelector("#modal-prev").addEventListener("click", () => {
-    openDisplay(displays[(openIndex + displays.length - 1) % displays.length]);
-  });
-  document.querySelector("#modal-next").addEventListener("click", () => {
-    openDisplay(displays[(openIndex + 1) % displays.length]);
+  document.querySelector("#modal-prev").addEventListener("click", () => shiftPhoto(-1));
+  document.querySelector("#modal-next").addEventListener("click", () => shiftPhoto(1));
+  magnifyButton.addEventListener("click", () => setMagnify(!magnifyOn));
+  photoStage.addEventListener("pointermove", moveLoupe);
+  photoStage.addEventListener("pointerleave", () => {
+    loupe.hidden = true;
   });
 
   for (const button of document.querySelectorAll(".pad button")) {
@@ -625,6 +727,16 @@ function bindInput() {
   }
 }
 
+async function loadCatalog() {
+  try {
+    const response = await fetch(`${base}displays/catalog.json`);
+    if (!response.ok) return {};
+    return await response.json();
+  } catch {
+    return {};
+  }
+}
+
 async function main() {
   resize();
   bindInput();
@@ -637,9 +749,18 @@ async function main() {
     loadBar.style.width = `${Math.round(fraction * 100)}%`;
   });
   await document.fonts.ready.catch(() => {});
+  const catalog = await loadCatalog();
   await Promise.all(
     displays.map(async (display) => {
-      display.resolved = await resolvePhoto(display.id);
+      const listed = catalog[display.id] || [];
+      display.photos = listed.map((photo) => ({
+        url: `${base}${photo.url}`,
+        label: photo.label,
+        placeholder: false,
+      }));
+      display.resolved = display.photos.length
+        ? { url: display.photos[0].url, placeholder: false }
+        : await resolvePhoto(display.id);
       display.plate = makePlate(display, false);
       display.plateHot = makePlate(display, true);
     })

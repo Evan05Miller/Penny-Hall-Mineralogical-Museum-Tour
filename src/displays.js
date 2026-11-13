@@ -1,84 +1,39 @@
-// Each case is aimed from the scan stop where it sits in the middle of the photo.
-// yaw/pitch match the in-tour camera: yaw 0 looks toward -z, positive yaw turns toward -x.
+// Each display sits on a case marked on the floor plan.
+// position is [x, height, z]. The card is aimed from the nearest scan stop.
 //
 // To use your own photo, save it as public/displays/<id>.jpg
 // (png, jpeg, and webp work too) and reload.
 
-import { EYE, sweeps } from "./scan.js";
-
-function aim(sweepIndex, yaw, pitch, distance) {
-  const sweep = sweeps[sweepIndex];
-  const cp = Math.cos(pitch);
-  return [
-    sweep.x + -Math.sin(yaw) * cp * distance,
-    EYE + Math.sin(pitch) * distance,
-    sweep.z + -Math.cos(yaw) * cp * distance,
-  ];
-}
-
-const stand = 1.25;
-
-export const displays = [
-  {
-    id: "case-1",
-    title: "Wall Case",
-    caption: "Small specimens in the wall case by the entrance.",
-    sweep: 0,
-    yaw: 0,
-    pitch: -0.12,
-    position: aim(0, 0, -0.12, stand),
-    color: "#b79ad4",
-  },
-  {
-    id: "case-2",
-    title: "Mineral Cabinet",
-    caption: "The cabinet of larger mineral specimens beside the entrance.",
-    sweep: 0,
-    yaw: Math.PI,
-    pitch: -0.12,
-    position: aim(0, Math.PI, -0.12, stand),
-    color: "#4eae84",
-  },
-  {
-    id: "case-3",
-    title: "Basic Specimens",
-    caption: "The long case of basic specimens.",
-    sweep: 0,
-    yaw: -Math.PI / 2,
-    pitch: -0.12,
-    position: aim(0, -Math.PI / 2, -0.12, stand),
-    color: "#e09a45",
-  },
-  {
-    id: "case-4",
-    title: "Irénée du Pont Collection",
-    caption: "The wall cases under the Irénée du Pont Collection sign.",
-    sweep: 1,
-    yaw: 0,
-    pitch: -0.08,
-    position: aim(1, 0, -0.08, stand),
-    color: "#e0c06a",
-  },
-  {
-    id: "case-5",
-    title: "Gallery Case",
-    caption: "The center cabinet along the main run of cases.",
-    sweep: 2,
-    yaw: Math.PI,
-    pitch: -0.12,
-    position: aim(2, Math.PI, -0.12, stand),
-    color: "#6aa4d4",
-  },
-  {
-    id: "case-6",
-    title: "Crystal Case",
-    caption: "The case of colorful crystals beside the large amethyst.",
-    sweep: 3,
-    yaw: Math.PI,
-    pitch: -0.12,
-    position: aim(3, Math.PI, -0.12, stand),
-    color: "#f0e8dc",
-  },
+const spots = [
+  { x: 1.12, z: 1.09, sweep: 0 },
+  { x: 0.67, z: 2.31, sweep: 0 },
+  { x: -0.76, z: 1.60, sweep: 0 },
+  { x: -1.98, z: 1.17, sweep: 1 },
+  { x: -3.06, z: 1.11, sweep: 1 },
+  { x: -4.31, z: 1.10, sweep: 1 },
+  { x: -5.48, z: 0.89, sweep: 2 },
+  { x: -6.60, z: 0.90, sweep: 2 },
+  { x: -8.02, z: 1.12, sweep: 3 },
+  { x: -9.62, z: 1.16, sweep: 3 },
+  { x: -9.53, z: -3.67, sweep: 3 },
+  { x: -9.46, z: -0.37, sweep: 3 },
+  { x: -9.39, z: -1.74, sweep: 3 },
+  { x: -4.26, z: -2.45, sweep: 1 },
+  { x: -2.49, z: -2.81, sweep: 1 },
+  { x: -1.10, z: -2.55, sweep: 1 },
+  { x: -0.05, z: -1.31, sweep: 0 },
+  { x: 1.12, z: -0.24, sweep: 0 },
 ];
 
-export const INTERACT_DISTANCE = 2.1;
+const colors = ["#b79ad4", "#4eae84", "#e09a45", "#e0c06a", "#6aa4d4", "#f0e8dc"];
+
+export const displays = spots.map((spot, index) => ({
+  id: `case-${index + 1}`,
+  title: `Display ${index + 1}`,
+  caption: "A case in the Penny Hall gallery.",
+  sweep: spot.sweep,
+  position: [spot.x, 1.28, spot.z],
+  color: colors[index % colors.length],
+}));
+
+export const INTERACT_DISTANCE = 3.4;

@@ -1,0 +1,242 @@
+{
+  "case-1": [
+    {
+      "url": "displays/photos/case-1-overall.jpg",
+      "label": "Overall"
+    },
+    {
+      "url": "displays/photos/case-1-left.jpg",
+      "label": "Left"
+    },
+    {
+      "url": "displays/photos/case-1-right.jpg",
+      "label": "Right"
+    }
+  ],
+  "case-2": [
+    {
+      "url": "displays/photos/case-2-overall.jpg",
+      "label": "Overall"
+    }
+  ],
+  "case-3": [
+    {
+      "url": "displays/photos/case-3-overall.jpg",
+      "label": "Overall"
+    },
+    {
+      "url": "displays/photos/case-3-left.jpg",
+      "label": "Left"
+    },
+    {
+      "url": "displays/photos/case-3-right.jpg",
+      "label": "Right"
+    }
+  ],
+  "case-4": [
+    {
+      "url": "displays/photos/case-4-overall.jpg",
+      "label": "Overall"
+    },
+    {
+      "url": "displays/photos/case-4-left.jpg",
+      "label": "Left"
+    },
+    {
+      "url": "displays/photos/case-4-right.jpg",
+      "label": "Right"
+    }
+  ],
+  "case-5": [
+    {
+      "url": "displays/photos/case-5-overall.jpg",
+      "label": "Overall"
+    },
+    {
+      "url": "displays/photos/case-5-left.jpg",
+      "label": "Left"
+    },
+    {
+      "url": "displays/photos/case-5-right.jpg",
+      "label": "Right"
+    }
+  ],
+  "case-6": [
+    {
+      "url": "displays/photos/case-6-overall.jpg",
+      "label": "Overall"
+    },
+    {
+      "url": "displays/photos/case-6-left.jpg",
+      "label": "Left"
+    },
+    {
+      "url": "displays/photos/case-6-right.jpg",
+      "label": "Right"
+    }
+  ],
+  "case-7": [
+    {
+      "url": "displays/photos/case-7-overall.jpg",
+      "label": "Overall"
+    },
+    {
+      "url": "displays/photos/case-7-left.jpg",
+      "label": "Left"
+    },
+    {
+      "url": "displays/photos/case-7-right.jpg",
+      "label": "Right"
+    }
+  ],
+  "case-8": [
+    {
+      "url": "displays/photos/case-8-overall.jpg",
+      "label": "Overall"
+    },
+    {
+      "url": "displays/photos/case-8-left.jpg",
+      "label": "Left"
+    },
+    {
+      "url": "displays/photos/case-8-right.jpg",
+      "label": "Right"
+    }
+  ],
+  "case-9": [
+    {
+      "url": "displays/photos/case-9-overall.jpg",
+      "label": "Overall"
+    },
+    {
+      "url": "displays/photos/case-9-left.jpg",
+      "label": "Left"
+    },
+    {
+      "url": "displays/photos/case-9-right.jpg",
+      "label": "Right"
+    }
+  ],
+  "case-10": [
+    {
+      "url": "displays/photos/case-10-overall.jpg",
+      "label": "Overall"
+    },
+    {
+      "url": "displays/photos/case-10-detail.jpg",
+      "label": "Detail"
+    }
+  ],
+  "case-11": [
+    {
+      "url": "displays/photos/case-11-overall.jpg",
+      "label": "Overall"
+    },
+    {
+      "url": "displays/photos/case-11-detail.jpg",
+      "label": "Detail"
+    }
+  ],
+  "case-12": [
+    {
+      "url": "displays/photos/case-12-overall.jpg",
+      "label": "Overall"
+    },
+    {
+      "url": "displays/photos/case-12-left.jpg",
+      "label": "Left"
+    },
+    {
+      "url": "displays/photos/case-12-right.jpg",
+      "label": "Right"
+    }
+  ],
+  "case-13": [
+    {
+      "url": "displays/photos/case-13-overall.jpg",
+      "label": "Overall"
+    },
+    {
+      "url": "displays/photos/case-13-left.jpg",
+      "label": "Left"
+    },
+    {
+      "url": "displays/photos/case-13-right.jpg",
+      "label": "Right"
+    }
+  ],
+  "case-14": [
+    {
+      "url": "displays/photos/case-14-top.jpg",
+      "label": "Top"
+    },
+    {
+      "url": "displays/photos/case-14-middle.jpg",
+      "label": "Middle"
+    },
+    {
+      "url": "displays/photos/case-14-bottom.jpg",
+      "label": "Bottom"
+    }
+  ],
+  "case-15": [
+    {
+      "url": "displays/photos/case-15-left.jpg",
+      "label": "Left"
+    },
+    {
+      "url": "displays/photos/case-15-middle.jpg",
+      "label": "Middle"
+    },
+    {
+      "url": "displays/photos/case-15-right.jpg",
+      "label": "Right"
+    }
+  ],
+  "case-16": [
+    {
+      "url": "displays/photos/case-16-overall.jpg",
+      "label": "Overall"
+    },
+    {
+      "url": "displays/photos/case-16-top.jpg",
+      "label": "Top"
+    },
+    {
+      "url": "displays/photos/case-16-bottom.jpg",
+      "label": "Bottom"
+    },
+    {
+      "url": "displays/photos/case-16-text.jpg",
+      "label": "Text"
+    }
+  ],
+  "case-17": [
+    {
+      "url": "displays/photos/case-17-top.jpg",
+      "label": "Top"
+    },
+    {
+      "url": "displays/photos/case-17-top-down-view.jpg",
+      "label": "Top down view"
+    },
+    {
+      "url": "displays/photos/case-17-bottom.jpg",
+      "label": "Bottom"
+    }
+  ],
+  "case-18": [
+    {
+      "url": "displays/photos/case-18-overall.jpg",
+      "label": "Overall"
+    },
+    {
+      "url": "displays/photos/case-18-left.jpg",
+      "label": "Left"
+    },
+    {
+      "url": "displays/photos/case-18-right.jpg",
+      "label": "Right"
+    }
+  ]
+}
