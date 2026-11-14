@@ -26,6 +26,30 @@
         </p>
       </header>
 
+      <aside id="hunt" hidden>
+        <button id="hunt-toggle" type="button" aria-expanded="true" aria-controls="hunt-body">
+          <span class="hunt-heading">
+            <span class="eyebrow">Scavenger hunt</span>
+            <strong id="hunt-score">1 of 5</strong>
+          </span>
+          <span id="hunt-chevron" aria-hidden="true"></span>
+        </button>
+        <div id="hunt-body">
+          <img id="hunt-photo" alt="" />
+          <p id="hunt-question"></p>
+          <p id="hunt-hint" hidden></p>
+          <div class="hunt-entry">
+            <input id="hunt-answer" type="text" autocomplete="off" placeholder="Type your answer" aria-label="Answer" />
+            <button id="hunt-hint-btn" type="button" aria-pressed="false">Hint</button>
+          </div>
+          <p id="hunt-feedback" hidden></p>
+          <div class="hunt-nav">
+            <button id="hunt-prev" type="button" aria-label="Previous question">‹</button>
+            <button id="hunt-next" type="button" aria-label="Next question">›</button>
+          </div>
+        </div>
+      </aside>
+
       <div id="minimap-wrap">
         <canvas id="minimap" width="768" height="621" aria-label="Floor plan"></canvas>
         <p class="map-caption">Floor plan · click to walk</p>
@@ -45,8 +69,7 @@
           <p class="eyebrow">Mineralogical Museum</p>
           <h2>Walk the gallery</h2>
           <p class="lede">
-            Move through the room and step up to one display at a time. Open it
-            to look through its photos, and use the magnifier to enlarge a detail.
+            Welcome to the Penny Hall Mineralogical Museum. This is a virtual tour of the museum's gallery, where you can explore the exhibits and learn about the fascinating world of minerals. Use your mouse or keyboard to navigate through the space and click on the display cases to view detailed information about the specimens.
           </p>
           <button id="begin" type="button">Begin the tour</button>
           <p class="address">235 Academy Street, Newark</p>

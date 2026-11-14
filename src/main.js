@@ -11,6 +11,7 @@ import {
   worldToMap,
 } from "./scan.js";
 import { INTERACT_DISTANCE, displays } from "./displays.js";
+import { huntQuestions } from "./hunt.js";
 
 const FACE_FILES = ["px", "nx", "py", "ny", "pz", "nz"];
 const ROOM_SIZE = 16;
@@ -35,6 +36,15 @@ const loupe = document.querySelector("#loupe");
 const magnifyButton = document.querySelector("#modal-magnify");
 const modalPrev = document.querySelector("#modal-prev");
 const modalNext = document.querySelector("#modal-next");
+const hunt = document.querySelector("#hunt");
+const huntScore = document.querySelector("#hunt-score");
+const huntToggle = document.querySelector("#hunt-toggle");
+const huntPhoto = document.querySelector("#hunt-photo");
+const huntQuestion = document.querySelector("#hunt-question");
+const huntHint = document.querySelector("#hunt-hint");
+const huntAnswer = document.querySelector("#hunt-answer");
+const huntHintBtn = document.querySelector("#hunt-hint-btn");
+const huntFeedback = document.querySelector("#hunt-feedback");
 
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -609,11 +619,77 @@ async function loadSweepBoxes(onProgress) {
   }
 }
 
+function answersMatch(typed, expected) {
+  const normalize = (value) => String(value).trim().toLowerCase().replace(/\s+/g, " ");
+  const choices = Array.isArray(expected) ? expected : [expected];
+  const given = normalize(typed);
+  return given.length > 0 && choices.some((choice) => normalize(choice) === given);
+}
+
+function buildHunt() {
+  let huntIndex = 0;
+  const drafts = huntQuestions.map(() => "");
+  const hintsOpen = huntQuestions.map(() => false);
+
+  const refreshStatus = () => {
+    const item = huntQuestions[huntIndex];
+    const solved = huntQuestions.filter((question, index) =>
+      answersMatch(drafts[index], question.answer)
+    ).length;
+    huntScore.textContent =
+      solved === huntQuestions.length ? "Complete" : `${huntIndex + 1} of ${huntQuestions.length}`;
+    hunt.classList.toggle("complete", solved === huntQuestions.length);
+    const correct = answersMatch(drafts[huntIndex], item.answer);
+    huntAnswer.classList.toggle("correct", correct);
+    huntFeedback.hidden = !correct;
+    huntFeedback.textContent = correct ? "Correct" : "";
+  };
+
+  const showQuestion = () => {
+    const item = huntQuestions[huntIndex];
+    huntPhoto.src = `${base}${encodeURI(item.image)}`;
+    huntPhoto.alt = item.question;
+    huntQuestion.textContent = item.question;
+    huntHint.textContent = item.hint;
+    huntHint.hidden = !hintsOpen[huntIndex];
+    huntHintBtn.setAttribute("aria-pressed", String(hintsOpen[huntIndex]));
+    huntAnswer.value = drafts[huntIndex];
+    refreshStatus();
+  };
+
+  const step = (direction) => {
+    const count = huntQuestions.length;
+    huntIndex = (huntIndex + direction + count) % count;
+    showQuestion();
+  };
+
+  huntAnswer.addEventListener("input", () => {
+    drafts[huntIndex] = huntAnswer.value;
+    refreshStatus();
+  });
+  huntHintBtn.addEventListener("click", () => {
+    hintsOpen[huntIndex] = !hintsOpen[huntIndex];
+    showQuestion();
+  });
+  document.querySelector("#hunt-prev").addEventListener("click", () => step(-1));
+  document.querySelector("#hunt-next").addEventListener("click", () => step(1));
+
+  const narrow = window.matchMedia("(max-width: 800px)").matches;
+  hunt.classList.toggle("collapsed", narrow);
+  huntToggle.setAttribute("aria-expanded", String(!narrow));
+  huntToggle.addEventListener("click", () => {
+    const collapsed = hunt.classList.toggle("collapsed");
+    huntToggle.setAttribute("aria-expanded", String(!collapsed));
+  });
+  showQuestion();
+}
+
 function bindInput() {
   window.addEventListener("resize", resize);
   new ResizeObserver(() => resize()).observe(canvas);
 
   window.addEventListener("keydown", (event) => {
+    if (event.target.closest("#hunt")) return;
     if (modalOpen && !event.repeat && event.code === "ArrowLeft") {
       event.preventDefault();
       shiftPhoto(-1);
@@ -699,8 +775,10 @@ function bindInput() {
   document.querySelector("#begin").addEventListener("click", () => {
     touring = true;
     intro.hidden = true;
+    hunt.hidden = false;
     canvas.focus();
   });
+  buildHunt();
   document.querySelector("#modal-close").addEventListener("click", closeModal);
   modal.addEventListener("click", (event) => {
     if (event.target.closest("[data-close]")) closeModal();

@@ -63,7 +63,8 @@ input {
 #loader,
 #intro,
 #modal,
-.pad {
+.pad,
+#hunt {
   z-index: 2;
 }
 
@@ -71,13 +72,187 @@ input {
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
+  right: 380px;
   display: flex;
   justify-content: space-between;
   gap: 24px;
   align-items: flex-end;
   padding: 22px 28px 0;
   pointer-events: none;
+}
+
+#hunt {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: min(340px, calc(100vw - 36px));
+  max-height: calc(100dvh - 36px);
+  display: flex;
+  flex-direction: column;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  backdrop-filter: blur(8px);
+  overflow: hidden;
+}
+
+#hunt-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 14px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+}
+
+.hunt-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.hunt-heading .eyebrow {
+  margin: 0;
+}
+
+#hunt-score {
+  font-weight: 400;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+}
+
+#hunt.complete #hunt-score {
+  color: var(--brass);
+}
+
+#hunt-chevron {
+  width: 8px;
+  height: 8px;
+  border-right: 1.5px solid var(--brass);
+  border-bottom: 1.5px solid var(--brass);
+  transform: rotate(45deg) translateY(-2px);
+  flex: 0 0 auto;
+}
+
+#hunt.collapsed #hunt-chevron {
+  transform: rotate(-45deg) translateY(1px);
+}
+
+#hunt-body {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: auto;
+}
+
+#hunt.collapsed #hunt-body {
+  display: none;
+}
+
+#hunt-photo {
+  display: block;
+  width: calc(100% - 20px);
+  height: 150px;
+  margin: 0 10px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #111;
+}
+
+#hunt-question {
+  margin: 12px 14px 0;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+#hunt-hint {
+  margin: 8px 14px 0;
+  color: var(--brass);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+#hunt-hint[hidden] {
+  display: none;
+}
+
+.hunt-entry {
+  display: flex;
+  gap: 8px;
+  margin: 12px 10px 0;
+}
+
+#hunt-answer {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(8, 7, 6, 0.55);
+  color: var(--ink);
+}
+
+#hunt-answer.correct {
+  border-color: var(--brass);
+}
+
+#hunt-hint-btn {
+  flex: 0 0 auto;
+  background: transparent;
+  border: 1px solid var(--brass);
+  border-radius: 999px;
+  padding: 8px 14px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+#hunt-hint-btn[aria-pressed="true"] {
+  background: var(--brass);
+  color: #1a140c;
+}
+
+#hunt-feedback {
+  margin: 8px 14px 0;
+  color: var(--brass);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+#hunt-feedback[hidden] {
+  display: none;
+}
+
+.hunt-nav {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 10px 12px;
+}
+
+#hunt-prev,
+#hunt-next {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid var(--brass);
+  background: transparent;
+  color: var(--ink);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+#hunt-prev:hover,
+#hunt-next:hover,
+#hunt-hint-btn:hover {
+  filter: brightness(1.08);
 }
 
 .brand h1,
@@ -256,7 +431,8 @@ input {
 #intro[hidden],
 #loader[hidden],
 #prompt[hidden],
-#toast[hidden] {
+#toast[hidden],
+#hunt[hidden] {
   display: none;
 }
 
@@ -422,7 +598,16 @@ input {
   }
 
   #topbar {
+    right: 0;
     padding: 16px 16px 0;
+  }
+
+  #hunt {
+    top: 78px;
+    right: 12px;
+    left: 12px;
+    width: auto;
+    max-height: calc(100dvh - 170px);
   }
 
   .brand h1 {
