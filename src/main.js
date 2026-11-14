@@ -689,7 +689,7 @@ function bindInput() {
   new ResizeObserver(() => resize()).observe(canvas);
 
   window.addEventListener("keydown", (event) => {
-    if (event.target.closest("#hunt")) return;
+    if (event.target.closest("#hunt, #info")) return;
     if (modalOpen && !event.repeat && event.code === "ArrowLeft") {
       event.preventDefault();
       shiftPhoto(-1);
@@ -704,7 +704,10 @@ function bindInput() {
     if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Space"].includes(event.code)) {
       event.preventDefault();
     }
-    if (event.code === "Escape") closeModal();
+    if (event.code === "Escape") {
+      closeModal();
+      closeInfo();
+    }
     if (event.code === "KeyE" && touring && !modalOpen) {
       const near = displays
         .filter((display) => horizontalDistance(display) <= INTERACT_DISTANCE)
@@ -776,9 +779,24 @@ function bindInput() {
     touring = true;
     intro.hidden = true;
     hunt.hidden = false;
+    info.hidden = false;
     canvas.focus();
   });
   buildHunt();
+  const info = document.querySelector("#info");
+  const infoPanel = document.querySelector("#info-panel");
+  const infoToggle = document.querySelector("#info-toggle");
+  const closeInfo = () => {
+    infoPanel.hidden = true;
+    infoToggle.setAttribute("aria-expanded", "false");
+  };
+  infoToggle.addEventListener("click", () => {
+    infoPanel.hidden = !infoPanel.hidden;
+    infoToggle.setAttribute("aria-expanded", String(!infoPanel.hidden));
+  });
+  window.addEventListener("pointerdown", (event) => {
+    if (!event.target.closest("#info")) closeInfo();
+  });
   document.querySelector("#modal-close").addEventListener("click", closeModal);
   modal.addEventListener("click", (event) => {
     if (event.target.closest("[data-close]")) closeModal();
