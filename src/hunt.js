@@ -32,6 +32,6 @@ export const huntQuestions = [
     question: "Name one of the six crystal systems",
     image: "displays/photos/case-10-overall.jpg",
     hint: "You may be able to read about this topic near the Geode Rock.",
-    answer: ["cubic", "hexagonal", "trigonal", "tetragonal", "orthorhombic", "monoclinic", "triclinic"],
+    answer: ["isometric", "hexagonal", "tetragonal", "orthorhombic", "monoclinic", "triclinic"],
   },
 ];
